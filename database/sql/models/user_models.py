@@ -22,16 +22,26 @@ class Users(Base):
 
 class UsersProducts(Base):
     __tablename__ = "users_products"
-    user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"))
-    product: Mapped[str | None] = mapped_column(ForeignKey("products.name", ondelete="CASCADE"))
+    user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="RESTRICT"))
+    product: Mapped[str | None] = mapped_column(ForeignKey("products.name", ondelete="RESTRICT"))
     UniqueConstraint("user_id", name="idx_users_products")
 
 
 class UserOrders(Base):
     __tablename__ = "users_orders"
-    user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"))
-    order: Mapped[int | None] = mapped_column(ForeignKey("orders.id"))
+    user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="RESTRICT"))
+    order: Mapped[int | None] = mapped_column(ForeignKey("orders.id", ondelete="RESTRICT"))
     UniqueConstraint("user_id", name="idx_users_orders")
+
+
+class UserOrdersProducts(Base):
+    __tablename__ = "users_orders_products"
+    user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="RESTRICT"))
+    order: Mapped[int | None] = mapped_column(ForeignKey("orders.id", ondelete="RESTRICT"))
+    product: Mapped[str | None] = mapped_column(ForeignKey("products.name", ondelete="RESTRICT"))
+    price: Mapped[float | None] = mapped_column(ForeignKey("products.price", ondelete="RESTRICT"))
+    UniqueConstraint("user_id", name="idx_users_orders_products")
+
 
 
 class Roles(enum.Enum):

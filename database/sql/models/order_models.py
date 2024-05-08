@@ -1,6 +1,6 @@
 import enum
-from sqlalchemy import ForeignKey, func
-from sqlalchemy.orm import Mapped, relationship, mapped_column
+from sqlalchemy import ForeignKey, UniqueConstraint
+from sqlalchemy.orm import Mapped, mapped_column
 
 from database.sql.models.base_model import Base
 
@@ -16,9 +16,10 @@ class Orders(Base):
     product: Mapped[str | None] = mapped_column(ForeignKey("products.name"))
     price: Mapped[float | None]
     count: Mapped[int]
-    # amount: Mapped[float | None] = func(price * count) # ????
+    amount: Mapped[float | None]
+    # total: Mapped[float]  # ????
     user_id: Mapped[str | None] = mapped_column(ForeignKey("users.id"))  # TODO Непонятно будет ли проблема
-    # total: Mapped[float]  # ????                                      # , с новыми пользователями.
+                                                                        # , с новыми пользователями.
                                                                         # Их нужно как-то добавлять раньше,
                                                                         # чем создавать ордер
     __mapper_args__ = {
@@ -29,6 +30,8 @@ class Orders(Base):
 
 class OrdersProducts(Base):
     __tablename__ = "orders_products"
-    order_id: Mapped[int | None] = mapped_column(ForeignKey("orders.id", ondelete="CASCADE"))
-    product: Mapped[str | None] = mapped_column(ForeignKey("products.name", ondelete="CASCADE"))
-    # price: Mapped[float | None] = mapped_column(ForeignKey("products.price", ondelete="CASCADE"))
+    order_id: Mapped[int | None] = mapped_column(ForeignKey("orders.id", ondelete="RESTRICT"))
+    product: Mapped[str | None] = mapped_column(ForeignKey("products.name", ondelete="RESTRICT"))
+    price: Mapped[float | None] = mapped_column(ForeignKey("products.price", ondelete="RESTRICT"))
+    UniqueConstraint("order_id", name="idx_orders_products")
+

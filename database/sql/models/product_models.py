@@ -25,7 +25,7 @@ class Products(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str | None] = mapped_column(unique=True)
     product_type: Mapped[ProductTypes | None] = mapped_column(default=ProductTypes.course, autoincrement=True)
-    price: Mapped[float | None]
+    price: Mapped[float | None] = mapped_column(unique=True)
     status: Mapped[Status | None]
     users: Mapped[list["Users"]] = relationship(back_populates="products", secondary="users_products")  # yep
     orders: Mapped[list["Orders"]] = relationship(back_populates="products", secondary="orders_products")  # yep
