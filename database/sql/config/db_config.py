@@ -22,11 +22,11 @@ class Settings(BaseSettings):
 	DB_NAME: str = env("DB_NAME")
 
 	@property
-	def url_asyncpg(self):
+	def asyncpg_url(self):
 		return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.DB_NAME}"
 
 	@property
-	def url_psycopg(self):
+	def psycopg2_url(self):
 		return f"postgresql+psycopg2://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.DB_NAME}"
 
 
@@ -34,8 +34,8 @@ settings = Settings()
 
 
 class Engines:
-	async_engine = create_async_engine(url=settings.url_asyncpg, echo=True, max_overflow=10)
+	async_engine = create_async_engine(url=settings.asyncpg_url, echo=True, max_overflow=10)
 	async_session_factory = async_sessionmaker(async_engine)
 
-	sync_engine = create_engine(url=settings.url_psycopg, echo=True, max_overflow=10)
+	sync_engine = create_engine(url=settings.psycopg2_url, echo=True, max_overflow=10)
 	sync_session_factory = sessionmaker(sync_engine)
