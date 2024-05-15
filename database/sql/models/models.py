@@ -23,9 +23,8 @@
 # class Employees(Base):
 # 	__tablename__ = "employees"
 # 	name: Mapped[str]
-# 	role: Mapped[bool] = mapped_column(default=False)  # TODO вот тут я бухой после ответа Лозового поплыл
+# 	role: Mapped[bool] = mapped_column(default=False)
 # 	email: Mapped[str] = mapped_column(unique=True)
-# # TODO вот я бухой тут понаписал много хорошего, но надобно перепроветрить на трезвую, шо я не наебался на сто дурных нигде
 #
 #
 # class Products(Base):
