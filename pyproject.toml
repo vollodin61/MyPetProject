@@ -33,6 +33,7 @@ psycopg2 = "^2.9.9"
 pyrogram = "^2.0.106"
 pydantic-settings = "^2.2.1"
 sqlalchemy = "^2.0.29"
+uvicorn = "^0.29.0"
 
 
 [build-system]
