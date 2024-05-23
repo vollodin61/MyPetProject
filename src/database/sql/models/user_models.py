@@ -4,22 +4,38 @@ from typing import Optional
 from sqlalchemy import BigInteger, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
+from src.database.api.schemas.user_schemas import PydCreateUser
 from src.database.sql.models.base_model import Base
 
 
 class Users(Base):
+    """
+    Documentation
+    :param: tg_id
+    :type: BigInteger, unique
+    """
+
     __tablename__ = "users"
     tg_id: Mapped[int | None] = mapped_column(BigInteger, unique=True)
     username: Mapped[str | None]
     status: Mapped[str | None]
     first_name: Mapped[str | None]
     last_name: Mapped[str | None]
-    total_cost: Mapped[int | None]
+    total_spent: Mapped[int | None]
     phone: Mapped[str | None]
     # products: Mapped[list["Products"]] = relationship(back_populates="user", secondary="users_products")
     # orders: Mapped[list["Orders"]] = relationship(back_populates="user", secondary="users_orders")
-#  Также надо найти, где я видел include_colum (вроде бы), попробовать с этой фигней
-#  Вроде бы через polymorphic можно сделать и должны будут отображаться колонки.
+
+    def to_read_model(self) -> PydCreateUser:
+        return PydCreateUser(
+            tg_id=self.tg_id,
+            username=self.username,
+            status=self.status,
+            first_name=self.first_name,
+            last_name=self.last_name,
+            total_spent=self.total_spent,
+            phone=self.phone,
+        )
 
 
 class UsersProducts(Base):
@@ -43,7 +59,6 @@ class UserOrdersProducts(Base):
     product: Mapped[str | None] = mapped_column(ForeignKey("products.name", ondelete="RESTRICT"))
     price: Mapped[float | None] = mapped_column(ForeignKey("products.price", ondelete="RESTRICT"))
     UniqueConstraint("user_id", name="idx_users_orders_products")
-
 
 
 class Roles(enum.Enum):

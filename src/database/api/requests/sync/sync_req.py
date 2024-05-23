@@ -3,7 +3,7 @@ import re
 from aiogram.types import Message
 from typing import List
 
-from src.database.sql.config.db_config import Engines
+from src.database.sql.config.db_config import Settings
 from src.database.sql.models.user_models import Users
 # from database.sql.models.product_models import Products
 from src.database.sql.models.base_model import Base
@@ -11,7 +11,7 @@ from src.logs.my_logger import MyLogger as Ml
 
 ice = Ml.ice
 # logger = Ml.log_debug
-sync_session_factory = Engines.sync_session_factory
+sync_session_factory = Settings.sync_session_factory
 
 
 def sync_get_user_by_tg_id(tg_id: int):  # -> Users | None
@@ -28,11 +28,11 @@ def sync_get_user_by_tg_id(tg_id: int):  # -> Users | None
 class SyncORM:
     @staticmethod
     def create_models():
-        Base.metadata.create_all(Engines.sync_engine)
+        Base.metadata.create_all(Settings.sync_engine)
 
     @staticmethod
     def drop_models():
-        Base.metadata.drop_all(Engines.sync_engine)
+        Base.metadata.drop_all(Settings.sync_engine)
 
     class UsersCRUD:
         @staticmethod

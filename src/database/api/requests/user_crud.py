@@ -1,13 +1,13 @@
 from aiogram.types import Message
 
 from src.database.api.config.api_config import app
-from src.database.sql.config.db_config import Engines
+from src.database.sql.config.db_config import Settings
 from src.database.sql.models.user_models import Users
 
 from src.logs.my_logger import MyLogger
 
 
-sync_session_factory = Engines.sync_session_factory
+sync_session_factory = Settings.sync_session_factory
 ice = MyLogger.ice
 # logger = MyLogger.log_debug
 

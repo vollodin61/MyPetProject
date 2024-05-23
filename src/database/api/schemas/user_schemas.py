@@ -1,42 +1,36 @@
-from datetime import datetime
 from enum import Enum
-from typing import List, Optional, Dict
-
 from pydantic import BaseModel
 
 
-class ETypes(Enum):
-    first = "first_name"
-    last = "last_name"
-
-
-class PydNames(BaseModel):
-    id: int
-    name: str
-    type: ETypes
-
-
-class PydUser(BaseModel):
-    id: int
-    role: str
-    name: List[PydNames] = []
+class Statuses(Enum):
+    active = "active"
+    not_active = "not_active"
+    banned = "BANNED"
+    deleted = "DELETED"
+    support = "support"
+    admin = "admin"
+    employer = "employer"
+    godlike = "godlike"
+    # god = "god"
 
 
 class PydCreateUser(BaseModel):
     tg_id: int
     username: str = ""
-    status: str = "active"
+    status: str = ""
     first_name: str = ""
     last_name: str = ""
-    total_cost: Optional[int] = None
+    total_spent: int | None
     phone: str = ""
     description: str = ""
+
+    class Config:
+        from_attributes = True
 
 
 class PydDeleteUser(BaseModel):
     tg_id: int
 
 
-class PydUpdateUser(BaseModel):
-    tg_id: int
-    values: Dict
+class PydSomeDict(BaseModel):
+    some_dict: dict
