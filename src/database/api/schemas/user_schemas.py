@@ -16,13 +16,13 @@ class Statuses(Enum):
 
 class PydCreateUser(BaseModel):
     tg_id: int
-    username: str = ""
-    status: str = ""
-    first_name: str = ""
-    last_name: str = ""
+    username: str = None
+    status: str = None
+    first_name: str = None
+    last_name: str = None
     total_spent: int | None
-    phone: str = ""
-    description: str = ""
+    phone: str = None
+    description: str = None
 
     class Config:
         from_attributes = True

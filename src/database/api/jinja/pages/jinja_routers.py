@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request, Depends
 from fastapi.templating import Jinja2Templates
-from src.database.api.routers.user_routers import get_users_by_statuses
+from src.database.api.requests.users_crud import get_users_by_statuses
 
 jinja_router = APIRouter(
     prefix="/pages",
