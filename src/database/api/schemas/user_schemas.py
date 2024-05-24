@@ -15,7 +15,7 @@ class Statuses(Enum):
 
 
 class PydCreateUser(BaseModel):
-    tg_id: int
+    tg_id: int = None
     username: str = None
     status: str = None
     first_name: str = None
@@ -29,7 +29,7 @@ class PydCreateUser(BaseModel):
 
 
 class PydDeleteUser(BaseModel):
-    tg_id: int
+    tg_id: int = None
 
 
 class PydSomeDict(BaseModel):
