@@ -4,7 +4,7 @@ from typing import Type
 from src.database.sql.config.db_config import Settings
 # from repositories.task_history import TaskHistoryRepository
 # from repositories.tasks import TasksRepository
-from src.database.api.repositories.user_repos import UsersRepository
+from src.database.api.repositories.repos import UsersRepository, ProductsRepository
 
 async_session_factory = Settings.async_session_factory
 
@@ -12,6 +12,7 @@ async_session_factory = Settings.async_session_factory
 # https://github1s.com/cosmicpython/code/tree/chapter_06_uow
 class IUnitOfWork(ABC):
     users: Type[UsersRepository]
+    products: Type[ProductsRepository]
     # tasks: Type[TasksRepository]
     # task_history: Type[TaskHistoryRepository]
 
@@ -44,7 +45,7 @@ class UnitOfWork:
         self.session = self.session_factory()
 
         self.users = UsersRepository(self.session)
-        # self.tasks = TasksRepository(self.session)
+        self.products = ProductsRepository(self.session)
         # self.task_history = TaskHistoryRepository(self.session)
 
     async def __aexit__(self, *args):

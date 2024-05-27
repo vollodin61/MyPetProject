@@ -8,6 +8,29 @@ from src.database.api.schemas.user_schemas import PydCreateUser
 from src.database.sql.models.base_model import Base
 
 
+class Roles(enum.Enum):
+    god = "god"
+    godlike = "godlike"
+    admin = "admin"
+    manager = "manager"
+    moderator = "moderator"
+    promoter = "promoter"
+    family = "family"
+    untouchable = "untouchable"
+
+
+class UserStatuses(enum.Enum):
+    active = "active"
+    not_active = "not_active"
+    banned = "BANNED"
+    deleted = "DELETED"
+    support = "support"
+    admin = "admin"
+    employer = "employer"
+    godlike = "godlike"
+    god = "god"
+
+
 class Users(Base):
     """
     Documentation
@@ -18,7 +41,7 @@ class Users(Base):
     __tablename__ = "users"
     tg_id: Mapped[int | None] = mapped_column(BigInteger, unique=True)
     username: Mapped[str | None]
-    status: Mapped[str | None]
+    status: Mapped["UserStatuses"]
     first_name: Mapped[str | None]
     last_name: Mapped[str | None]
     total_spent: Mapped[int | None]
@@ -63,28 +86,6 @@ class Users(Base):
 #     UniqueConstraint("user_id", name="idx_users_orders_products")
 #
 #
-# class Roles(enum.Enum):
-#     god = "god"
-#     admin = "admin"
-#     manager = "manager"
-#     moderator = "moderator"
-#     promoter = "promoter"
-#     family = "family"
-#     untouchable = "untouchable"
-
-
-class Statuses(enum.Enum):
-    active = "active"
-    not_active = "not_active"
-    banned = "BANNED"
-    deleted = "DELETED"
-    support = "support"
-    admin = "admin"
-    employer = "employer"
-    godlike = "godlike"
-    god = "god"
-
-
 # class Workers(Base):
 #     __tablename__ = "workers"
 #     tg_id: Mapped[int | None] = mapped_column(BigInteger, unique=True)

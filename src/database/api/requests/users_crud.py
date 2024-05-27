@@ -3,10 +3,10 @@ import logging
 from icecream import ic
 from fastapi import APIRouter, Depends
 from loguru import logger
-from sqlalchemy import update, select, text
+from sqlalchemy import update
 
 from src.database.api.config.dependencies import UOWDep
-from src.database.api.schemas.user_schemas import PydCreateUser, PydDeleteUser, PydSomeDict
+from src.database.api.schemas.user_schemas import PydCreateUser, PydSomeDict
 from src.database.api.services.tilda_parser import tilda_parser
 from src.database.sql.config.db_config import get_async_session  # поменять везде на асинхронные,
 # тк я делаю транзакцию общей

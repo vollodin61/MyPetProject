@@ -1,6 +1,6 @@
 from src.database.api.schemas.user_schemas import PydCreateUser, \
     PydDeleteUser  # TaskHistorySchemaAdd, TaskSchemaAdd, TaskSchemaEdit
-from src.database.api.utils.repository import AbstractRepository
+from src.database.api.utils.repository import AbstractRepository  # noqa
 from src.database.api.utils.unitofwork import IUnitOfWork
 
 

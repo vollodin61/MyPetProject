@@ -1,31 +1,42 @@
-# import enum
-#
-# from sqlalchemy import ForeignKey, UniqueConstraint
-# from sqlalchemy.orm import Mapped, relationship, mapped_column
-#
-# from src.database.sql.models.base_model import Base
-#
-#
-# class ProductTypes(enum.Enum):
-#     course = "course"
-#     webinar_series = "webinar_series"
-#     poll = "poll"
-#     otz = "otz"
-#     club = "club"
-#
-#
-# class Status(enum.Enum):
-#     active = "active"
-#     inactive = "inactive"
-#
-#
-# class Products(Base):
-#     __tablename__ = "products"
-#     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-#     name: Mapped[str | None] = mapped_column(unique=True)
-#     product_type: Mapped[ProductTypes | None] = mapped_column(default=ProductTypes.course, autoincrement=True)
-#     price: Mapped[float | None] = mapped_column(unique=True)
-#     status: Mapped[Status | None]
+import enum
+
+from sqlalchemy import ForeignKey, UniqueConstraint
+from sqlalchemy.orm import Mapped, relationship, mapped_column
+
+from src.database.api.schemas.product_schemas import PydCreateProduct
+from src.database.sql.models.base_model import Base
+
+
+class ProductTypes(enum.Enum):
+    course = "course"
+    webinar_series = "webinar_series"
+    poll = "poll"
+    otz = "otz"
+    club = "club"
+
+
+class ProductStatuses(enum.Enum):
+    active = "active"
+    inactive = "inactive"
+
+
+class Products(Base):
+    __tablename__ = "products"
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    name: Mapped[str | None] = mapped_column(unique=True)
+    product_type: Mapped["ProductTypes"] = mapped_column(default=ProductTypes.course, autoincrement=True)
+    price: Mapped[int | None]
+    status: Mapped["ProductStatuses"]
+
+    def to_read_model(self) -> PydCreateProduct:
+        return PydCreateProduct(
+            name=self.name,
+            product_type=self.product_type,
+            price=self.price,
+            status=self.status,
+            description=self.description,
+        )
+
 #     users: Mapped[list["Users"]] = relationship(back_populates="products", secondary="users_products")  # yep
 #     orders: Mapped[list["Orders"]] = relationship(back_populates="products", secondary="orders_products")  # yep
 #     videos: Mapped[list["Videos"]] = relationship(back_populates="products", secondary="products_videos")  # yep

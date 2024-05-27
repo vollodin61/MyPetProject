@@ -11,6 +11,7 @@ from src.bots.sarbot.bot.data.redis_connection import Singleton
 
 from src.database.sql.config.db_config import Settings
 from src.database.api.chat.chat_routers import chat_router
+from src.database.api.requests.products_crud import product_router
 # from src.database.api.jinja.pages.jinja_routers import jinja_router
 from src.database.api.requests.users_crud import user_router
 
@@ -18,6 +19,7 @@ app = FastAPI(title="Kowka API")
 all_routers = (
     user_router,
     chat_router,
+    product_router,
     # jinja_router,
 )
 
