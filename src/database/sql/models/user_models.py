@@ -23,8 +23,9 @@ class Users(Base):
     last_name: Mapped[str | None]
     total_spent: Mapped[int | None]
     phone: Mapped[str | None]
-    products: Mapped[list["Products"]] = relationship(back_populates="user", secondary="users_products")
-    orders: Mapped[list["Orders"]] = relationship(back_populates="user", secondary="users_orders")
+    email: Mapped[str | None]
+    # products: Mapped[list["Products"]] = relationship(back_populates="user", secondary="users_products")
+    # orders: Mapped[list["Orders"]] = relationship(back_populates="user", secondary="users_orders")
 
     def to_read_model(self) -> PydCreateUser:
         return PydCreateUser(
@@ -35,50 +36,63 @@ class Users(Base):
             last_name=self.last_name,
             total_spent=self.total_spent,
             phone=self.phone,
+            email=self.email
         )
 
 
-class UsersProducts(Base):
-    __tablename__ = "users_products"
-    user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="RESTRICT"))
-    product: Mapped[str | None] = mapped_column(ForeignKey("products.name", ondelete="RESTRICT"))
-    UniqueConstraint("user_id", name="idx_users_products")
+# class UsersProducts(Base):
+#     __tablename__ = "users_products"
+#     user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="RESTRICT"))
+#     product: Mapped[str | None] = mapped_column(ForeignKey("products.name", ondelete="RESTRICT"))
+#     UniqueConstraint("user_id", name="idx_users_products")
+#
+#
+# class UserOrders(Base):
+#     __tablename__ = "users_orders"
+#     user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="RESTRICT"))
+#     order: Mapped[int | None] = mapped_column(ForeignKey("orders.id", ondelete="RESTRICT"))
+#     UniqueConstraint("user_id", name="idx_users_orders")
+#
+#
+# class UserOrdersProducts(Base):
+#     __tablename__ = "users_orders_products"
+#     user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="RESTRICT"))
+#     order: Mapped[int | None] = mapped_column(ForeignKey("orders.id", ondelete="RESTRICT"))
+#     product: Mapped[str | None] = mapped_column(ForeignKey("products.name", ondelete="RESTRICT"))
+#     price: Mapped[float | None] = mapped_column(ForeignKey("products.price", ondelete="RESTRICT"))
+#     UniqueConstraint("user_id", name="idx_users_orders_products")
+#
+#
+# class Roles(enum.Enum):
+#     god = "god"
+#     admin = "admin"
+#     manager = "manager"
+#     moderator = "moderator"
+#     promoter = "promoter"
+#     family = "family"
+#     untouchable = "untouchable"
 
 
-class UserOrders(Base):
-    __tablename__ = "users_orders"
-    user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="RESTRICT"))
-    order: Mapped[int | None] = mapped_column(ForeignKey("orders.id", ondelete="RESTRICT"))
-    UniqueConstraint("user_id", name="idx_users_orders")
-
-
-class UserOrdersProducts(Base):
-    __tablename__ = "users_orders_products"
-    user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="RESTRICT"))
-    order: Mapped[int | None] = mapped_column(ForeignKey("orders.id", ondelete="RESTRICT"))
-    product: Mapped[str | None] = mapped_column(ForeignKey("products.name", ondelete="RESTRICT"))
-    price: Mapped[float | None] = mapped_column(ForeignKey("products.price", ondelete="RESTRICT"))
-    UniqueConstraint("user_id", name="idx_users_orders_products")
-
-
-class Roles(enum.Enum):
-    god = "god"
+class Statuses(enum.Enum):
+    active = "active"
+    not_active = "not_active"
+    banned = "BANNED"
+    deleted = "DELETED"
+    support = "support"
     admin = "admin"
-    manager = "manager"
-    moderator = "moderator"
-    promoter = "promoter"
-    family = "family"
-    untouchable = "untouchable"
+    employer = "employer"
+    godlike = "godlike"
+    god = "god"
 
 
-class Workers(Base):
-    __tablename__ = "workers"
-    tg_id: Mapped[int | None] = mapped_column(BigInteger, unique=True)
-    username: Mapped[str | None]
-    status: Mapped[str | None]
-    first_name: Mapped[str | None]
-    last_name: Mapped[str | None]
-    role: Mapped[Roles | None]
-    phone: Mapped[str | None]
-    email: Mapped[str | None]
-    salary: Mapped[str | None]
+# class Workers(Base):
+#     __tablename__ = "workers"
+#     tg_id: Mapped[int | None] = mapped_column(BigInteger, unique=True)
+#     username: Mapped[str | None]
+#     status: Mapped[str | None]
+#     first_name: Mapped[str | None]
+#     last_name: Mapped[str | None]
+#     role: Mapped[Roles | None]
+#     phone: Mapped[str | None]
+#     email: Mapped[str | None]
+#     salary: Mapped[str | None]

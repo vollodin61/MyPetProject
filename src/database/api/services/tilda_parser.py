@@ -36,8 +36,8 @@ test_purchase = {
 
 
 def get_tg_id_by_username(username: str):
-    cl = "get_users"  # from userbot import client
-    return 0
+    cl = "get_users"  # from userbot.config.ubot_cfg import client
+    return 1
 
 
 def tilda_parser(some_dict: dict):
@@ -46,16 +46,15 @@ def tilda_parser(some_dict: dict):
         username=some_dict.get("username"),
         status="active",
         first_name=some_dict.get("name"),
-        # email=some_dict.get("email"), noqa
+        email=some_dict.get("email"),
         total_spent=some_dict.get("payment").get("amount"),
         phone=some_dict.get("phone"),
-
     )
 
     products = some_dict.get("payment").get("products")
     order = some_dict.get("payment").get("orderid")
-    return user, products
+    return user, products, order
 
 
-a, b = tilda_parser(test_purchase)
-ice(a, b)
+a, b, c = tilda_parser(test_purchase)
+ice(type(a))

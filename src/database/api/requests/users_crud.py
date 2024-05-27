@@ -7,6 +7,7 @@ from sqlalchemy import update, select, text
 
 from src.database.api.config.dependencies import UOWDep
 from src.database.api.schemas.user_schemas import PydCreateUser, PydDeleteUser, PydSomeDict
+from src.database.api.services.tilda_parser import tilda_parser
 from src.database.sql.config.db_config import get_async_session  # поменять везде на асинхронные,
 # тк я делаю транзакцию общей
 from src.database.sql.models.user_models import Users
@@ -47,17 +48,17 @@ async def get_users(uow: UOWDep):
 
 
 @user_router.post("/from_tilda22")
-async def post_from_tilda(uow: UOWDep, some_dict: dict):
-    # распарсить входящий json?
+async def post_from_tilda(uow: UOWDep, tilda_dict: dict):
+    user, product, order = tilda_parser(some_dict=tilda_dict)  # распарсить входящий json?
+    await UsersService().add_user(uow=uow, user=user)
     # обработать отправить создание пользователя в бд
-    await UsersService().add_user(uow=uow, **some_dict)
-    # отправить человеку ссылку на бот из Ирыного юзер-бота
+    # отправить человеку ссылку на бот из Ириного юзер-бота
     # new_dict = dict(some_dict)
     # ice(some_dict.dict())
-    ic(some_dict)
+    ic(tilda_dict)
     # ice(new_dict)
 
-    return some_dict
+    return tilda_dict
 
 
 @user_router.post("/from_tilda")
