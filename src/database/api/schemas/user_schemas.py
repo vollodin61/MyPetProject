@@ -33,4 +33,4 @@ class PydDeleteUser(BaseModel):
 
 
 class PydSomeDict(BaseModel):
-    some_dict: dict
+    pass

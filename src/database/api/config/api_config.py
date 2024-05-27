@@ -11,14 +11,14 @@ from src.bots.sarbot.bot.data.redis_connection import Singleton
 
 from src.database.sql.config.db_config import Settings
 from src.database.api.chat.chat_routers import chat_router
-from src.database.api.jinja.pages.jinja_routers import jinja_router
+# from src.database.api.jinja.pages.jinja_routers import jinja_router
 from src.database.api.requests.users_crud import user_router
 
 app = FastAPI(title="Kowka API")
 all_routers = (
     user_router,
     chat_router,
-    jinja_router,
+    # jinja_router,
 )
 
 for router in all_routers:
@@ -28,12 +28,12 @@ app.mount("/static", StaticFiles(directory="src/database/api/jinja/static"), nam
 
 
 # Благодаря этой функции клиент видит ошибки, происходящие на сервере, вместо "Internal server error"
-@app.exception_handler(RequestValidationError)
-async def validation_exception_handler(request: Request, exc: RequestValidationError):
-    return JSONResponse(
-        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-        content=jsonable_encoder({"detail": exc.__repr__()}),
-    )
+# @app.exception_handler(RequestValidationError)
+# async def validation_exception_handler(request: Request, exc: RequestValidationError):
+#     return JSONResponse(
+#         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+#         content=jsonable_encoder({"detail": exc.errors()}),
+#     )
 
 
 REDIS_HOST = Settings.REDIS_HOST

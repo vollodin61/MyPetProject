@@ -1,3 +1,6 @@
+import logging
+
+from icecream import ic
 from fastapi import APIRouter, Depends
 from loguru import logger
 from sqlalchemy import update, select, text
@@ -11,51 +14,59 @@ from src.database.api.services.user_services import UsersService
 
 from src.logs.my_ice import ice
 
+logging.basicConfig(level=logging.DEBUG)
 user_router = APIRouter(
     prefix='/users',
     tags=['Users']
 )
 
 
-@user_router.get("")
-async def get_users(uow: UOWDep):
-    users = await UsersService().get_users(uow)
-    return users
-
-
-@user_router.get("/{user_id}")
+@user_router.get("/one/{user_id}")
 async def get_user_by_id(uow: UOWDep, user_id: int):
     user = await UsersService().get_user(uow=uow, user_id=user_id)
     return user
 
 
-# @user_router.get("/{user_id}")
-# async def get_user_by_tg_id(tg_id: int, sess=Depends(get_async_session)):
-#     try:
-#         kurwa_bobre: Users | None = sess.query(Users).filter(Users.tg_id == tg_id).one()
-#         return {
-#             "status": "ok",
-#             "data": kurwa_bobre.__repr__(),
-#             "details": None
-#         }
-#     except Exception as err:
-#         ice(err)
-#         logger.exception(err)
-#         return {
-#             "status": "Error",
-#             "data": None,
-#             "details": err.__repr__()
-#         }
-#     finally:
-#         sess.commit()
+@user_router.get("/get_several")
+async def get_several_users(uow: UOWDep, tg_id: int = None, username: str = None,
+                            status: str = None, total_spent: int = None, first_name: str = None,
+                            last_name: str = None, phone: str = None, description: str = None):
+    pre_dict = dict(tg_id=tg_id, username=username,
+                    status=status, total_spent=total_spent, first_name=first_name,
+                    last_name=last_name, phone=phone, description=description)
+    dct = {key: value for key, value in pre_dict.items() if value}
+
+    user = await UsersService().get_several_users(uow=uow, filter_by=dct)
+    return user
+
+
+@user_router.get("/get_all")
+async def get_users(uow: UOWDep):
+    users = await UsersService().get_users(uow)
+    return users
+
+
+@user_router.post("/from_tilda22")
+async def post_from_tilda(uow: UOWDep, some_dict: dict):
+    # распарсить входящий json?
+    # обработать отправить создание пользователя в бд
+    await UsersService().add_user(uow=uow, **some_dict)
+    # отправить человеку ссылку на бот из Ирыного юзер-бота
+    # new_dict = dict(some_dict)
+    # ice(some_dict.dict())
+    ic(some_dict)
+    # ice(new_dict)
+
+    return some_dict
 
 
 @user_router.post("/from_tilda")
 async def from_tilda(some_dict: PydSomeDict, sess=Depends(get_async_session)):
     try:
         dct = dict(some_dict)
-        print(f"{dct.get("some_dict").get("Ссылка_на_Телеграм") = }")
-        # data = (**some_dict.dict())
+        ice(f"{dct.get("some_dict").get("Ссылка_на_Телеграм") = }")
+        data = (some_dict.dict())
+        ice(data)
         return {
             "status": "ok",
             "data": some_dict,
@@ -63,28 +74,6 @@ async def from_tilda(some_dict: PydSomeDict, sess=Depends(get_async_session)):
         }
     except Exception as err:
         ice(err)
-        return {
-            "status": "Error",
-            "data": None,
-            "details": err.__repr__()
-        }
-    finally:
-        sess.commit()
-
-
-@user_router.get("/")
-async def get_users_by_statuses(status: str, sess=Depends(get_async_session)):
-    try:
-        result = sess.query(Users).filter(Users.status == status).all()
-        ice(result)
-        return {
-            "status": "ok",
-            "data": result,
-            "details": None
-        }
-    except Exception as err:
-        ice(err)
-        logger.exception(err)
         return {
             "status": "Error",
             "data": None,
@@ -130,30 +119,6 @@ async def update_user(user: PydCreateUser, sess=Depends(get_async_session)):
             "status": "ok",
             "data": result,
             "details": "users successfully updated!)!)"
-        }
-    except Exception as err:
-        logger.exception(err)
-        return {
-            "status": "Error",
-            "data": None,
-            "details": err.__repr__()
-        }
-    finally:
-        sess.commit()
-
-
-@user_router.delete("/{user_id}")
-async def delete_user(user: PydDeleteUser, sess=Depends(get_async_session)):
-    dct = user.dict
-    ice(dct)
-    try:
-        query = update(Users).where(Users.tg_id == user.tg_id).values(status="DELETED").returning(Users.status)
-        result = sess.execute(query)
-        deleted_user_tg_id = f"user.status with tg_id: {user.tg_id} = {result.fetchone()[0]}"
-        return {
-            "status": "ok",
-            "data": f"{deleted_user_tg_id = }",
-            "details": "users successfully deleted!)!)"
         }
     except Exception as err:
         logger.exception(err)

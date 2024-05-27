@@ -5,7 +5,14 @@ from src.database.api.utils.unitofwork import IUnitOfWork
 
 
 class UsersService:
-    async def add_user(self, uow: IUnitOfWork, user: PydCreateUser):
+    async def add_user(self, uow: IUnitOfWork, some_dict: dict, user: PydCreateUser):
+        user = PydCreateUser(
+            tg_id=0000,
+            username=some_dict.get("username"),
+            status="active",
+            first_name=some_dict.get("name"),
+            total_spent=some_dict.get("payment").get("amount")
+        )
         users_dict = user.model_dump()
         async with uow:
             user_id = await uow.users.add_one(users_dict)
@@ -21,6 +28,11 @@ class UsersService:
         async with uow:
             user = await uow.users.find_one(id=user_id)
             return user
+
+    async def get_several_users(self, uow: IUnitOfWork, filter_by: dict):
+        async with uow:
+            users = await uow.users.find_several(filter_by)
+            return users
 
     async def edit_user(self, uow: IUnitOfWork, user_id: int, user: PydCreateUser):
         users_dict = user.model_dump()

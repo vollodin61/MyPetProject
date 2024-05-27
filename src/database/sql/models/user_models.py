@@ -2,7 +2,7 @@ import enum
 from typing import Optional
 
 from sqlalchemy import BigInteger, ForeignKey, UniqueConstraint
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.database.api.schemas.user_schemas import PydCreateUser
 from src.database.sql.models.base_model import Base
@@ -23,8 +23,8 @@ class Users(Base):
     last_name: Mapped[str | None]
     total_spent: Mapped[int | None]
     phone: Mapped[str | None]
-    # products: Mapped[list["Products"]] = relationship(back_populates="user", secondary="users_products")
-    # orders: Mapped[list["Orders"]] = relationship(back_populates="user", secondary="users_orders")
+    products: Mapped[list["Products"]] = relationship(back_populates="user", secondary="users_products")
+    orders: Mapped[list["Orders"]] = relationship(back_populates="user", secondary="users_orders")
 
     def to_read_model(self) -> PydCreateUser:
         return PydCreateUser(

@@ -3,6 +3,8 @@ from abc import ABC, abstractmethod
 from sqlalchemy import insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.logs.my_ice import ice
+
 
 class AbstractRepository(ABC):
     @abstractmethod
@@ -40,4 +42,13 @@ class SQLAlchemyRepository(AbstractRepository):
         stmt = select(self.model).filter_by(**filter_by)
         res = await self.session.execute(stmt)
         res = res.scalar_one().to_read_model()
+        return res
+
+    async def find_several(self, filter_by):
+        # ice(filter_by)
+        stmt = select(self.model).filter_by(**filter_by)
+        # ice(stmt.__str__())
+        res = await self.session.execute(stmt)
+        res = [row[0].to_read_model() for row in res.all()]
+        # ice(res)
         return res
