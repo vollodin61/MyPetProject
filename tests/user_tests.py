@@ -6,18 +6,18 @@ from loguru import logger
 from sqlalchemy import insert, select
 
 from conftests import client, async_session_maker, prepare_database, ac
-from src.database.sql.models.user_models import Users
+from src.database.sql.models.user_models import UsersModel
 
 # asyncio.run(prepare_database())
 
 
 async def test_add_user_():
     async with async_session_maker() as session:
-        stmt = insert(Users).values(tg_id=11, total_spent=2, username="USERNAME")
+        stmt = insert(UsersModel).values(tg_id=11, total_spent=2, username="USERNAME")
         await session.execute(stmt)
         await session.commit()
 
-        query = select(Users)
+        query = select(UsersModel)
         result = await session.execute(query)
         logger.info(result.all())
 

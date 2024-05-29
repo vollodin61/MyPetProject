@@ -18,7 +18,7 @@ class ProductsService:
 
     async def get_product(self, uow: IUnitOfWork, product_id: int):
         async with uow:
-            product = await uow.products.find_one(id=product_id)
+            product = await uow.products.find_one_by_id(id=product_id)
             return product
 
     async def get_several_products(self, uow: IUnitOfWork, filter_by: dict):

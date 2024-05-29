@@ -5,6 +5,7 @@ from sqlalchemy.orm import Mapped, relationship, mapped_column
 
 from src.database.api.schemas.product_schemas import PydCreateProduct
 from src.database.sql.models.base_model import Base
+from src.database.sql.models.cross_user_models import UsersProductsModel
 
 
 class ProductTypes(enum.Enum):
@@ -20,13 +21,14 @@ class ProductStatuses(enum.Enum):
     inactive = "inactive"
 
 
-class Products(Base):
+class ProductsModel(Base):
     __tablename__ = "products"
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str | None] = mapped_column(unique=True)
     product_type: Mapped["ProductTypes"] = mapped_column(default=ProductTypes.course, autoincrement=True)
     price: Mapped[int | None]
     status: Mapped["ProductStatuses"]
+    users: Mapped[list["UsersModel"]] = relationship(back_populates="products", secondary="users_products")  # yep
 
     def to_read_model(self) -> PydCreateProduct:
         return PydCreateProduct(
@@ -37,7 +39,6 @@ class Products(Base):
             description=self.description,
         )
 
-#     users: Mapped[list["Users"]] = relationship(back_populates="products", secondary="users_products")  # yep
 #     orders: Mapped[list["Orders"]] = relationship(back_populates="products", secondary="orders_products")  # yep
 #     videos: Mapped[list["Videos"]] = relationship(back_populates="products", secondary="products_videos")  # yep
 #     lessons: Mapped[list["Lessons"]] = relationship(back_populates="products", secondary="products_lessons")  # yep

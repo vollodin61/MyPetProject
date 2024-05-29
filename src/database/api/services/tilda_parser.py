@@ -16,13 +16,13 @@ test_purchase = {
         "orderid": "2100966246",
         "products": [
             {
-                "name": "2нд Тест Пуршасе",
+                "name": "Kowka",
                 "quantity": 3,
                 "amount": 6,
                 "price": "2"
             },
             {
-                "name": "TEST_PURCHASE",
+                "name": "Sarafanka",
                 "quantity": 5,
                 "amount": 5,
                 "price": "1"
@@ -37,10 +37,10 @@ test_purchase = {
 
 def get_tg_id_by_username(username: str):
     cl = "get_users"  # from userbot.config.ubot_cfg import client
-    return 2
+    return 21
 
 
-def tilda_parser(some_dict: dict):
+def tilda_parser(some_dict: dict) -> tuple:
     user = PydCreateUser(
         tg_id=get_tg_id_by_username(username=some_dict.get("username")),
         username=some_dict.get("username"),
@@ -52,10 +52,13 @@ def tilda_parser(some_dict: dict):
     )
 
     products_list = some_dict.get("payment").get("products")
-    ice(products_list)
-    order = some_dict.get("payment").get("orderid")
-    return user, products_list, order
+    order = dict()
+    order["payment"] = some_dict.get("payment")
+    order["formid"] = some_dict.get("formid")
+    order["formname"] = some_dict.get("formname")
+
+    return user, order
 
 
-a, b, c = tilda_parser(test_purchase)
-ice(type(a))
+a, b = tilda_parser(test_purchase)
+ice(b)

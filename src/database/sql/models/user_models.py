@@ -6,6 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.database.api.schemas.user_schemas import PydCreateUser
 from src.database.sql.models.base_model import Base
+from src.database.sql.models.cross_user_models import UsersProductsModel
 
 
 class Roles(enum.Enum):
@@ -31,7 +32,7 @@ class UserStatuses(enum.Enum):
     god = "god"
 
 
-class Users(Base):
+class UsersModel(Base):
     """
     Documentation
     :param: tg_id
@@ -39,6 +40,7 @@ class Users(Base):
     """
 
     __tablename__ = "users"
+    id: Mapped[int] = mapped_column(primary_key=True)
     tg_id: Mapped[int | None] = mapped_column(BigInteger, unique=True)
     username: Mapped[str | None]
     status: Mapped["UserStatuses"]
@@ -47,11 +49,12 @@ class Users(Base):
     total_spent: Mapped[int | None]
     phone: Mapped[str | None]
     email: Mapped[str | None]
-    # products: Mapped[list["Products"]] = relationship(back_populates="user", secondary="users_products")
+    products: Mapped[list["ProductsModel"]] = relationship(back_populates="users", secondary="users_products")
     # orders: Mapped[list["Orders"]] = relationship(back_populates="user", secondary="users_orders")
 
     def to_read_model(self) -> PydCreateUser:
         return PydCreateUser(
+            id=self.id,
             tg_id=self.tg_id,
             username=self.username,
             status=self.status,
@@ -63,13 +66,6 @@ class Users(Base):
         )
 
 
-# class UsersProducts(Base):
-#     __tablename__ = "users_products"
-#     user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="RESTRICT"))
-#     product: Mapped[str | None] = mapped_column(ForeignKey("products.name", ondelete="RESTRICT"))
-#     UniqueConstraint("user_id", name="idx_users_products")
-#
-#
 # class UserOrders(Base):
 #     __tablename__ = "users_orders"
 #     user_id: Mapped[int | None] = mapped_column(ForeignKey("users.id", ondelete="RESTRICT"))

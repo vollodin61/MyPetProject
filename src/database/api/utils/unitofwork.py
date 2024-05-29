@@ -2,9 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Type
 
 from src.database.sql.config.db_config import Settings
-# from repositories.task_history import TaskHistoryRepository
-# from repositories.tasks import TasksRepository
-from src.database.api.repositories.repos import UsersRepository, ProductsRepository
+from src.database.api.repositories.repos import UsersRepository, ProductsRepository, UserProductsRepository
 
 async_session_factory = Settings.async_session_factory
 
@@ -13,7 +11,7 @@ async_session_factory = Settings.async_session_factory
 class IUnitOfWork(ABC):
     users: Type[UsersRepository]
     products: Type[ProductsRepository]
-    # tasks: Type[TasksRepository]
+    user_products: Type[UserProductsRepository]
     # task_history: Type[TaskHistoryRepository]
 
     @abstractmethod
@@ -36,6 +34,10 @@ class IUnitOfWork(ABC):
     async def rollback(self):
         ...
 
+    @abstractmethod
+    async def flush(self):
+        ...
+
 
 class UnitOfWork:
     def __init__(self):
@@ -46,7 +48,7 @@ class UnitOfWork:
 
         self.users = UsersRepository(self.session)
         self.products = ProductsRepository(self.session)
-        # self.task_history = TaskHistoryRepository(self.session)
+        self.user_products = UserProductsRepository(self.session)
 
     async def __aexit__(self, *args):
         await self.rollback()
@@ -57,3 +59,6 @@ class UnitOfWork:
 
     async def rollback(self):
         await self.session.rollback()
+
+    async def flush(self):
+        await self.session.flush()

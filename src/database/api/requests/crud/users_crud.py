@@ -5,6 +5,7 @@ from fastapi import APIRouter
 from loguru import logger
 from src.database.api.config.dependencies import UOWDep
 from src.database.api.schemas.user_schemas import PydCreateUser
+from src.database.api.services.cross_services import UserProductsService
 from src.database.api.services.tilda_parser import tilda_parser
 from src.database.api.services.user_services import UsersService
 
@@ -19,7 +20,7 @@ user_router = APIRouter(
 
 @user_router.get("/one/{user_id}")
 async def get_user_by_id(uow: UOWDep, user_id: int):
-    user = await UsersService().get_user(uow=uow, user_id=user_id)
+    user = await UsersService().get_user_by_id(uow=uow, user_id=user_id)
     return user
 
 
@@ -50,12 +51,16 @@ async def create_user(uow: UOWDep, user: PydCreateUser):
 
 @user_router.post("/from_tilda")
 async def post_from_tilda(uow: UOWDep, tilda_dict: dict):
-    user, product, order = tilda_parser(some_dict=tilda_dict)  # распарсить входящий json?
-    check_user = await UsersService().check_user(uow=uow, username=user.username)
-    user_id = await UsersService().add_user(uow=uow, user=user)
-    # обработать отправить создание пользователя в бд
-    # отправить человеку ссылку на бот из Ириного юзер-бота
-    # тут return должен мне отправлять оповещение, что пользователь добавлен. Или записывать куда-то это в лог
+    user, order = tilda_parser(some_dict=tilda_dict)  # распарсить входящий json?
+    # check_user = await UsersService().check_user(uow=uow, username=user.username)
+    user_dict = {"username": user.username}
+    try:
+        user_id = await UsersService().add_user(uow=uow, user=user)
+        add_products = await UserProductsService().add_user_products(uow, order)
+    except:
+        user_id = await UsersService().get_user_by_any(uow=uow, filter_by=user_dict)
+        # add_products = await UsersService().add_user_products(uow, order)
+    # user_id = await UsersService().from_tilda(uow=uow, tilda_dict=tilda_dict)
     return {"status": "ok", "user_id": user_id, "details": "users successfully created!)!)"}
 
 

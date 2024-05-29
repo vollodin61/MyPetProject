@@ -15,6 +15,7 @@ class PydStatuses(BaseModel):
 
 
 class PydCreateUser(BaseModel):
+    id: int = None
     tg_id: int = None
     username: str = None
     status: str = None
@@ -27,7 +28,3 @@ class PydCreateUser(BaseModel):
 
     class Config:
         from_attributes = True
-
-
-class PydDeleteUser(BaseModel):
-    tg_id: int = None

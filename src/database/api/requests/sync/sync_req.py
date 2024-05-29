@@ -4,7 +4,7 @@ from aiogram.types import Message
 from typing import List
 
 from src.database.sql.config.db_config import Settings
-from src.database.sql.models.user_models import Users
+from src.database.sql.models.user_models import UsersModel
 # from database.sql.models.product_models import Products
 from src.database.sql.models.base_model import Base
 from src.logs.my_logger import MyLogger as Ml
@@ -17,7 +17,7 @@ sync_session_factory = Settings.sync_session_factory
 def sync_get_user_by_tg_id(tg_id: int):  # -> Users | None
     with sync_session_factory() as sess:
         try:
-            kurwa_bobre: Users | None = sess.query(Users).filter(Users.tg_id == tg_id).one()
+            kurwa_bobre: UsersModel | None = sess.query(UsersModel).filter(UsersModel.tg_id == tg_id).one()
             return ice(kurwa_bobre)
         except Exception as err:
             ice(err)
@@ -40,10 +40,10 @@ class SyncORM:
             return re.findall(pattern=r"(?<=: ).+", string=msg_text)
 
         @staticmethod
-        def get_user_by_tg_id(tg_id: int) -> Users | None:
+        def get_user_by_tg_id(tg_id: int) -> UsersModel | None:
             with sync_session_factory() as sess:
                 try:
-                    kurwa_bobre: Users | None = sess.query(Users).filter(Users.tg_id == tg_id).one()
+                    kurwa_bobre: UsersModel | None = sess.query(UsersModel).filter(UsersModel.tg_id == tg_id).one()
                     return kurwa_bobre
                 except Exception as err:
                     # print(f'{"!" * 88}\nОШИПКА!\n{err}\n{"!" * 88}')
@@ -51,10 +51,10 @@ class SyncORM:
                 return None
 
         @staticmethod
-        def get_user_by_username(username: str) -> Users | None:
+        def get_user_by_username(username: str) -> UsersModel | None:
             with sync_session_factory() as sess:
                 try:
-                    kurwa_bobre: Users | None = sess.query(Users).filter(Users.username == username).one()
+                    kurwa_bobre: UsersModel | None = sess.query(UsersModel).filter(UsersModel.username == username).one()
                     return kurwa_bobre
                 except Exception as err:
                     ice(err)
@@ -64,11 +64,11 @@ class SyncORM:
         def insert_user(msg: Message | None = None, total_cost: int = 0):
             with sync_session_factory() as sess:
                 try:
-                    new_user = Users(tg_id=msg.from_user.id,
-                                     username=msg.from_user.username,
-                                     status="active",
-                                     first_name=msg.from_user.first_name,
-                                     last_name=msg.from_user.last_name, )  # Тут должен быть ещё update total_cost
+                    new_user = UsersModel(tg_id=msg.from_user.id,
+                                          username=msg.from_user.username,
+                                          status="active",
+                                          first_name=msg.from_user.first_name,
+                                          last_name=msg.from_user.last_name, )  # Тут должен быть ещё update total_cost
                     sess.add(new_user)
                     sess.commit()
                 except Exception as err:
