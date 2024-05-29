@@ -6,7 +6,7 @@ from src.database.api.utils.unitofwork import IUnitOfWork
 
 class UsersService:
     async def add_user(self, uow: IUnitOfWork, user: PydCreateUser):
-        users_dict = user.model_dump()
+        users_dict = user.model_dump(exclude_unset=True)
         async with uow:
             user_id = await uow.users.add_one(users_dict)
             await uow.commit()
@@ -27,10 +27,10 @@ class UsersService:
             users = await uow.users.find_several(filter_by)
             return users
 
-    async def edit_user(self, uow: IUnitOfWork, user_id: int, user: PydCreateUser):
-        users_dict = user.model_dump()
+    async def edit_user(self, uow: IUnitOfWork, user: PydCreateUser, user_id: int):
+        users_dict = user.model_dump(exclude_unset=True)
         async with uow:
-            await uow.users.edit_one(user_id, users_dict)
+            result = await uow.users.edit_one(user_id, users_dict)
 
             # curr_user = await uow.users.find_one(id=user_id)
             # user_history_log = UserHistorySchemaAdd(
@@ -41,8 +41,4 @@ class UsersService:
             # user_history_log = user_history_log.model_dump()
             # await uow.user_history.add_one(user_history_log)
             await uow.commit()
-
-    # async def get_user_history(self, uow: IUnitOfWork):
-    #     async with uow:
-    #         history = await uow.user_history.find_all()
-    #         return history
+        return result

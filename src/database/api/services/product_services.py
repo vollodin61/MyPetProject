@@ -27,21 +27,8 @@ class ProductsService:
             return products
 
     async def edit_product(self, uow: IUnitOfWork, product_id: int, product: PydCreateProduct):
-        products_dict = product.model_dump()
+        products_dict = product.model_dump(exclude_unset=True)
         async with uow:
-            await uow.products.edit_one(product_id, products_dict)
-
-            # curr_product = await uow.products.find_one(id=product_id)
-            # product_history_log = productHistorySchemaAdd(
-            #     product_id=product_id,
-            #     previous_assignee_id=curr_product.assignee_id,
-            #     new_assignee_id=product.assignee_id
-            # )
-            # product_history_log = product_history_log.model_dump()
-            # await uow.product_history.add_one(product_history_log)
+            result = await uow.products.edit_one(product_id, products_dict)
             await uow.commit()
-
-    # async def get_product_history(self, uow: IUnitOfWork):
-    #     async with uow:
-    #         history = await uow.product_history.find_all()
-    #         return history
+        return result

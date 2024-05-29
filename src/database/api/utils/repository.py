@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy import insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
-
+from sqlalchemy.engine.result import ChunkedIteratorResult
 from src.logs.my_ice import ice
 
 
@@ -28,8 +28,15 @@ class SQLAlchemyRepository(AbstractRepository):
         return res.scalar_one()
 
     async def edit_one(self, id: int, data: dict) -> int:
+        if data.get("total_spent") and data.get("total_spent") > 0:
+            pre_stmt = select(self.model).filter_by(id=id)
+            res = await self.session.execute(pre_stmt)
+            r = res.scalar_one().total_spent
+            ice(r)
+            data["total_spent"] += r
         stmt = update(self.model).values(**data).filter_by(id=id).returning(self.model.id)
         res = await self.session.execute(stmt)
+        # ice(res.scalar_one())
         return res.scalar_one()
 
     async def find_all(self):

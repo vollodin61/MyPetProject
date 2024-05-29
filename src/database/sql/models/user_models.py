@@ -22,8 +22,8 @@ class Roles(enum.Enum):
 class UserStatuses(enum.Enum):
     active = "active"
     not_active = "not_active"
-    banned = "BANNED"
-    deleted = "DELETED"
+    banned = "banned"
+    deleted = "deleted"
     support = "support"
     admin = "admin"
     employer = "employer"

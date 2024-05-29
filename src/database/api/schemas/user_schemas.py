@@ -5,8 +5,8 @@ from pydantic import BaseModel
 class PydStatuses(BaseModel):
     active: str | None = "active"
     not_active: str | None = "not_active"
-    banned: str | None = "BANNED"
-    deleted: str | None = "DELETED"
+    banned: str | None = "banned"
+    deleted: str | None = "deleted"
     support: str | None = "support"
     admin: str | None = "admin"
     employer: str | None = "employer"
@@ -20,7 +20,7 @@ class PydCreateUser(BaseModel):
     status: str = None
     first_name: str = None
     last_name: str = None
-    total_spent: int | None
+    total_spent: int = 0
     phone: str = None
     email: str = None
     description: str = None
@@ -31,7 +31,3 @@ class PydCreateUser(BaseModel):
 
 class PydDeleteUser(BaseModel):
     tg_id: int = None
-
-
-class PydSomeDict(BaseModel):
-    pass
