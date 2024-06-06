@@ -15,7 +15,7 @@ class Settings:
     env = Env()
     env.read_env()
 
-    REDIS_HOST: str = env("REDIS_HOST")  # from env должно быть
+    REDIS_HOST: str = env("REDIS_HOST")
     REDIS_PORT: str = env("REDIS_PORT")
 
     POSTGRES_HOST: str = env("POSTGRES_HOST")
