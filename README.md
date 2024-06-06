@@ -42,6 +42,7 @@
 - jinja2 = "^3.1.4"
 - websockets = "^12.0"
 - gunicorn = "^22.0.0"
-- fastapi-cache2 = "^0.2.1"]
-- django = "^5.0.6"
+- fastapi-cache2 = "^0.2.1" 
+- django = "^5.0.6" (И DRF в меньшей степени, но с них я начинал изучение pythona)
 - djangorestframework = "^3.15.1"
+- 
