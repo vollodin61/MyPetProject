@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "fbotfactory"
+name = "mypetproject"
 version = "0.1.0"
 description = ""
 authors = ["ilia_volodin <vollodin61@gmail.com>"]

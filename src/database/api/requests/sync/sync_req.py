@@ -21,7 +21,6 @@ def sync_get_user_by_tg_id(tg_id: int):  # -> Users | None
             return ice(kurwa_bobre)
         except Exception as err:
             ice(err)
-            # print(f'{"!" * 88}\nОШИПКА!\n{err}\n{"!" * 88}')
             return None
 
 
@@ -46,7 +45,6 @@ class SyncORM:
                     kurwa_bobre: UsersModel | None = sess.query(UsersModel).filter(UsersModel.tg_id == tg_id).one()
                     return kurwa_bobre
                 except Exception as err:
-                    # print(f'{"!" * 88}\nОШИПКА!\n{err}\n{"!" * 88}')
                     ice(err)
                 return None
 
@@ -151,6 +149,3 @@ class SyncORM:
 
     class OtzDonationsCRUD:
         ...
-
-# SyncORM.drop_models()
-# SyncORM.create_models()

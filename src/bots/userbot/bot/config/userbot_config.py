@@ -1,4 +1,3 @@
-import os
 from dataclasses import dataclass
 from typing import Tuple
 
@@ -29,13 +28,6 @@ class GlobalConfig:
 	add = {int(tg_id): tg_name for tg_id, tg_name in zip(admins_ids, admins_names)}
 	admins_dct = {name: value for name, value in zip(admins, add.items())}
 
-	# huper_dct = {name: value for name, value in zip(tuple(map(lambda x: x, env("admins").split(", "))),
-	# 												{int(tg_id): tg_name for tg_id, tg_name in
-	# 		ЭТО ПРОСТО ТУТ ТАК ДЛЯ КРАСОТЫ))))		 zip(tuple(map(lambda x: int(x), env("admins_ids").split(", "))),
-	# 													 tuple(map(lambda x: x,
-	# 															   env("admins_names").split(", "))))}.items())}
-	# ic(huper_dct)
-	# ic(type(add))
 
 	ifill_bot: Client = Client(name="ifill_bot", api_id=env("ifill_id"), api_hash=env("ifill_hash"),
 							   parse_mode=ParseMode.HTML)
@@ -46,9 +38,8 @@ class GlobalConfig:
 
 	scopes = ["https://spreadsheets.google.com/feeds", 'https://www.googleapis.com/auth/spreadsheets',
 			  "https://www.googleapis.com/auth/drive.file", "https://www.googleapis.com/auth/drive"]
-	# google_credentials = Credentials.from_service_account_file(os.path.abspath(".pyroecho.json"))  # DOCKER
-	google_credentials = Credentials.from_service_account_file("/home/i/MyPros/FBotFactory/src/bots/userbot/bot/config/.pyroecho.json")  # DOCKER
+	google_credentials = Credentials.from_service_account_file(os.path.abspath(".pyroecho.json"))  # DOCKER
 	scoped_credentials = get_scoped_credentials(google_credentials, scopes)
 	google_client_manager = AsyncioGspreadClientManager(scoped_credentials)
 
-	cat_key = '1LeT6zkDbdS99Mx7w-jN8f4IFihf8lhFbQMx34NyS7hc'
+	cat_key = env("cat_key")

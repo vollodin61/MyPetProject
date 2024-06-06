@@ -40,7 +40,7 @@ class Statuses:
 
 @dataclass
 class Urls:
-	club_url: str = 'https://t.me/+Yw9gMOk5i2E0YzMy'
+	club_url: str = ''
 	kowka_url: str = 'https://fillatova.ru/'
 	kowka_order_url: str = 'https://fillatova.ru/course'
 	sarafanka_url: str = 'https://fillatova.ru/sarafanka'
@@ -63,10 +63,6 @@ class Texts:
 	if_club: str = f'Привет! Добро пожаловать в клуб!\n\nПрисоединяйся!)\n{club_url}'
 	if_club_again: str = (f'Привет! Спасибо за продление участия в Клубе!)\n\n'
 					 f'Присоединяйся!)\n{club_url}')
-	# if_course = (f'Здравствуйте! Я Филатова Ирина, автор курса "Доброе слово для кошки"\n'
-	# 			 f'Спасибо за проявленный интерес и доверие! {Emo.just_smile} Оплата прошла успешно.\n\n'
-	# 			 f'Ссылку на чат я пришлю Вам за 2 дня до старта.\n\n'
-	# 			 f'Иногда алгоритмы дают сбои. Если ссылка не пришла вовремя, то напишите мне {Emo.write}')
 	if_course: str = (f'Здравствуйте! Я Филатова Ирина, автор курса "Доброе слово для кошки"\n'
 				 f'Спасибо за проявленный интерес и доверие! {Emo.just_smile} Оплата прошла успешно.\n\n'
 				 f'Присоединяйтесь к группе в чате https://t.me/+DYdesZ1aa9EyZTMy {Emo.big_smile}')

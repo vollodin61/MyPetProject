@@ -14,7 +14,7 @@ test_purchase = {
     "name": "Книга Листаетов",
     "email": "df@dff.crr",
     "phone": "+0123456789",
-    "username": "https://t.me/good_cat_admin",
+    "username": "Ihdjjd",
     "checkbox_1": "yes",
     "checkbox_2": "yes",
     "payment": {

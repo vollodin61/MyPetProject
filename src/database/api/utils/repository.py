@@ -22,14 +22,14 @@ class SQLAlchemyRepository(AbstractRepository):
         self.session = session
 
     async def add_one(self, data: dict) -> int:
-        # try:
-        stmt = insert(self.model).values(**data).returning(self.model.id)
-        res = await self.session.execute(stmt)
-        return res.scalar_one()
-        # except:
-        #     stmt = select(self.model).where(self.model.username == data["username"]).returning(self.model.id)
-        #     res = await self.session.execute(stmt)
-        #     return res.scalar_one()
+        try:
+            stmt = insert(self.model).values(**data).returning(self.model.id)
+            res = await self.session.execute(stmt)
+            return res.scalar_one()
+        except:
+            stmt = select(self.model).where(self.model.username == data["username"]).returning(self.model.id)
+            res = await self.session.execute(stmt)
+            return res.scalar_one()
 
     async def edit_one(self, id: int, data: dict) -> int:
         if data.get("total_spent") and data.get("total_spent") > 0:

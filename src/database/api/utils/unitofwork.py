@@ -7,12 +7,10 @@ from src.database.api.repositories.repos import UsersRepository, ProductsReposit
 async_session_factory = Settings.async_session_factory
 
 
-# https://github1s.com/cosmicpython/code/tree/chapter_06_uow
 class IUnitOfWork(ABC):
     users: Type[UsersRepository]
     products: Type[ProductsRepository]
     user_products: Type[UserProductsRepository]
-    # task_history: Type[TaskHistoryRepository]
 
     @abstractmethod
     def __init__(self):
