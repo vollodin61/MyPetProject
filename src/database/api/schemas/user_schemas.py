@@ -16,7 +16,7 @@ class PydStatuses(BaseModel):
 
 class PydCreateUser(BaseModel):
     id: int = None
-    tg_id: int = None
+    tg_id: int | None = None
     username: str = None
     status: str = None
     first_name: str = None

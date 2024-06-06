@@ -51,17 +51,19 @@ async def create_user(uow: UOWDep, user: PydCreateUser):
 
 @user_router.post("/from_tilda")
 async def post_from_tilda(uow: UOWDep, tilda_dict: dict):
-    user, order = tilda_parser(some_dict=tilda_dict)  # распарсить входящий json?
-    # check_user = await UsersService().check_user(uow=uow, username=user.username)
+    user, order = await tilda_parser(some_dict=tilda_dict)
     user_dict = {"username": user.username}
+    products = order.get("payment").get("products")
     try:
         user_id = await UsersService().add_user(uow=uow, user=user)
-        add_products = await UserProductsService().add_user_products(uow, order)
+        add_products = await UserProductsService().add_user_products(uow, products, user_id)
+
+        return {"status": "ok", "user_id": user_id,
+                "details": "user successfully created!)!)", "user_products": add_products}
     except:
-        user_id = await UsersService().get_user_by_any(uow=uow, filter_by=user_dict)
-        # add_products = await UsersService().add_user_products(uow, order)
-    # user_id = await UsersService().from_tilda(uow=uow, tilda_dict=tilda_dict)
-    return {"status": "ok", "user_id": user_id, "details": "users successfully created!)!)"}
+        user = await UsersService().get_user_by_any(uow=uow, filter_by=user_dict)
+        add_products = await UserProductsService().add_user_products(uow, products, user.id)
+        return {"status": "ok", "user": user, "details": "it's not new user", "user_products": add_products}
 
 
 @user_router.patch("/update_user_{id}")

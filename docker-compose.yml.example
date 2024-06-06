@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   db:
-    image: postgres:15
+    image: mirror.grc.io/postgres:15
     container_name: db_app
     command: -p 1221
     expose:

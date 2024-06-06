@@ -20,3 +20,6 @@ class PydCreateProduct(BaseModel):
     price: int | None = None
     status: str | None = PydProductStatuses
     description: str | None = ""
+
+    class Config:
+        from_attributes = True

@@ -41,7 +41,7 @@ class UsersModel(Base):
 
     __tablename__ = "users"
     id: Mapped[int] = mapped_column(primary_key=True)
-    tg_id: Mapped[int | None] = mapped_column(BigInteger, unique=True)
+    tg_id: Mapped[int | None] = mapped_column(BigInteger, nullable=True)
     username: Mapped[str | None]
     status: Mapped["UserStatuses"]
     first_name: Mapped[str | None]

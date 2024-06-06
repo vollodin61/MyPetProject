@@ -14,5 +14,5 @@ class UsersProductsModel(Base):
     def to_read_model(self) -> PydUserProducts:
         return PydUserProducts(
             user_id=self.user_id,
-            product=self.product
+            product=self.product,
         )

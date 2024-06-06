@@ -46,7 +46,8 @@ class GlobalConfig:
 
 	scopes = ["https://spreadsheets.google.com/feeds", 'https://www.googleapis.com/auth/spreadsheets',
 			  "https://www.googleapis.com/auth/drive.file", "https://www.googleapis.com/auth/drive"]
-	google_credentials = Credentials.from_service_account_file(os.path.abspath(".pyroecho.json"))  # DOCKER
+	# google_credentials = Credentials.from_service_account_file(os.path.abspath(".pyroecho.json"))  # DOCKER
+	google_credentials = Credentials.from_service_account_file("/home/i/MyPros/FBotFactory/src/bots/userbot/bot/config/.pyroecho.json")  # DOCKER
 	scoped_credentials = get_scoped_credentials(google_credentials, scopes)
 	google_client_manager = AsyncioGspreadClientManager(scoped_credentials)
 

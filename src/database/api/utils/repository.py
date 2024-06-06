@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 
 from sqlalchemy import insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.engine.result import ChunkedIteratorResult
 from src.logs.my_ice import ice
 
 
@@ -63,9 +62,9 @@ class SQLAlchemyRepository(AbstractRepository):
         try:
             stmt = select(self.model).filter_by(**filter_by)
             res = await self.session.execute(stmt)
-            res = res.scalar_one().to_read_model().id
+            user = res.scalar_one().to_read_model()
             # res = [row[0].to_read_model() for row in res.all()][0]
-            return res
+            return user
         except Exception as err:
             return err.__repr__()
 
@@ -78,10 +77,14 @@ class SQLAlchemyRepository(AbstractRepository):
         # ice(res)
         return res
 
-    async def add_user_product(self, products: list):
+    async def add_user_product(self, products: dict, user_id: int):
         products_names = []
         for product in products:
-            stmt = insert(self.model).values(user_id=1, product=product.get("name")).returning(self.model.product)
+            values = {
+                "user_id": user_id,
+                "product": product.get("name"),
+            }
+            stmt = insert(self.model).values(**values).returning(self.model.product)
             res = await self.session.execute(stmt)
             products_names.append(res.scalar_one())
         return products_names
